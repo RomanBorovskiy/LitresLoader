@@ -1,0 +1,21 @@
+[tool.black]
+line-length = 120
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  |venv
+)/
+'''
+#doest work?
+[tool.flake8]
+exclude =[".git","__pycache__", "venv"]
+max-line-length = 120
+count = true
+
+[tool.isort]
+src_paths = ["**/src/*"]
+line_length = 120
