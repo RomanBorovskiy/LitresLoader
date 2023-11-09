@@ -4,7 +4,7 @@ import logging
 import login_litres
 import litres_parser
 import fileloader
-from constants import COOKIE_SID, MAIN_URL, LOGGING_LEVEL
+from constants import COOKIE_SID_KEY, MAIN_URL, LOGGING_LEVEL
 
 
 logging.basicConfig(level=LOGGING_LEVEL)
@@ -21,7 +21,7 @@ async def load_book_list(sid: str) -> list:
 
 
 async def download_books(sid: str, books: list):
-    cookie = {COOKIE_SID: sid}
+    cookie = {COOKIE_SID_KEY: sid}
 
     await fileloader.FileLoader(cookie=cookie, load_list=books).start()
 

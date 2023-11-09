@@ -1,7 +1,7 @@
 import logging
 
 import selenium.webdriver.remote.webdriver
-from constants import COOKIE_AGREEMENT, COOKIE_SID, ENTER_TEXT, PROFILE_TEXT, MAIN_URL, LOGGING_LEVEL
+from constants import COOKIE_AGREEMENT, COOKIE_SID_KEY, ENTER_TEXT, PROFILE_TEXT, MAIN_URL, LOGGING_LEVEL
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options
@@ -76,7 +76,7 @@ class LitresSid:
             logging.error("error while logging wait")
             return ""
 
-        sid = self.driver.get_cookie(COOKIE_SID)
+        sid = self.driver.get_cookie(COOKIE_SID_KEY)
 
         if sid:
             sid_value = sid["value"]

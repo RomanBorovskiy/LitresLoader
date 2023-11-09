@@ -2,7 +2,7 @@ import logging
 import aiohttp
 import asyncio
 import requests
-from constants import MY_BOOKS_URL, BOOK_N_PAGE_URL, COOKIE_SID, MAIN_URL, LOGGING_LEVEL
+from constants import MY_BOOKS_URL, BOOK_N_PAGE_URL, COOKIE_SID_KEY, MAIN_URL, LOGGING_LEVEL
 from bs4 import BeautifulSoup
 from models import Book
 
@@ -25,7 +25,7 @@ class LitresPaser:
 
     def _init_session(self):
         self.session = requests.Session()
-        self.session.cookies.set(COOKIE_SID, self.sid_value)
+        self.session.cookies.set(COOKIE_SID_KEY, self.sid_value)
 
     def _close_session(self):
         if self.session:
@@ -117,7 +117,7 @@ class LitresPaser:
         return links_dict
 
     async def load_empty_links(self):
-        cookie = {COOKIE_SID: self.sid_value}
+        cookie = {COOKIE_SID_KEY: self.sid_value}
 
         async def get_async(book: Book):
             async with aiohttp.ClientSession(cookies=cookie) as session:
