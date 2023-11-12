@@ -28,7 +28,7 @@ class FileLoader:
     chunk_size = 2**15  # 32кб размер частей для скачивания
     concurrent_count: int = 10  # одновременно будет скачиваться файлов
 
-    def __init__(self, cookie: dict, load_list: list, download_path: Path = None):
+    def __init__(self, cookie: dict[str, str], load_list: list[str], download_path: Path = None):
         self.load_path = download_path or DEFAULT_PATH
         self.load_list = load_list
         self.cookie = cookie

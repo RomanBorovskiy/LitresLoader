@@ -6,3 +6,5 @@ beautifulsoup4==4.12.2
 aiohttp==3.8.6
 tqdm==4.66.1
 aiofiles==23.2.1
+PyQt5==5.15.10
+browsercookie==0.7.7

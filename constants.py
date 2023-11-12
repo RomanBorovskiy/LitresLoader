@@ -1,7 +1,6 @@
 import logging
 
 MAIN_URL = "https://www.litres.ru"
-#LOGIN_URL = "https://www.litres.ru/pages/login/"
 MY_BOOKS_URL = "https://www.litres.ru/pages/my_books_fresh/"
 BOOK_N_PAGE_URL = "https://www.litres.ru/pages/my_books_fresh/page-{}/"
 

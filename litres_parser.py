@@ -11,16 +11,22 @@ logging.basicConfig(level=LOGGING_LEVEL)
 
 
 def clear_string(s: str) -> str:
+    "Обработка строки - удаление символов форматирования и лишних пробелов"
     return s.strip()
 
 
 class LitresPaser:
+    """Парсер книг на сайте litres.ru
+
+    sid - SID аккаунта
+    try_load_empty - попытаться загрузить пути со страницы книги (актуально для аудиокниг и пдф-книг)
+    """
     session: requests.Session = None
     page_count = -1
     books: list[Book] = []
 
-    def __init__(self, sid: str, load_empty: bool = True):
-        self.load_empty = load_empty
+    def __init__(self, sid: str, try_load_empty: bool = True):
+        self.try_load_empty = try_load_empty
         self.sid_value = sid
 
     def _init_session(self):
@@ -38,7 +44,6 @@ class LitresPaser:
             page_url = MY_BOOKS_URL
 
         result = self.session.get(page_url).text
-
         return result
 
     @staticmethod
@@ -46,6 +51,10 @@ class LitresPaser:
         bs = BeautifulSoup(page_html, "html.parser")
 
         div_books = bs.find("div", {"class": "books_container"})
+        if not div_books:
+            logging.debug("not found div_books")
+            return 0
+
         pages_count = int(float(div_books["data-pages"]))
         logging.debug("pages_count: " + str(pages_count))
         return pages_count
@@ -155,7 +164,7 @@ class LitresPaser:
         finally:
             self._close_session()
 
-        if self.load_empty:
+        if self.try_load_empty:
             await self.load_empty_links()
 
         return self.books
