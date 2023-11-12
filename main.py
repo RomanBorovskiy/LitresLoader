@@ -32,7 +32,6 @@ def select_urls(books: list[Book]) -> list:
     return book_list
 
 async def gui_callback(call_type: CallType, payload):
-    print("enter cb", call_type, payload)
     match call_type:
         case CallType.LOGIN:
             #sid = get_sid()
@@ -41,7 +40,8 @@ async def gui_callback(call_type: CallType, payload):
 
         case CallType.LOAD_BOOKS:
             books = await load_book_list(payload)
-            print(books)
+            #books = [Book(title="test1", author="test_a1", url="test_url1", links={"FB2": "test"}, media_type="test"),
+            #         Book(title="test2", author="test_a2", url="test_url2", links={"PDF": "test"}, media_type="test")]
             return books
 
         case CallType.DOWNLOAD:
@@ -52,7 +52,7 @@ async def gui_callback(call_type: CallType, payload):
 
 
 
-async def main():
+def main():
     gui_run(gui_callback)
     return
     # #sid = get_sid()
@@ -66,4 +66,4 @@ async def main():
     # logging.info("downloaded {0} books".format(len(book_list)))
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
