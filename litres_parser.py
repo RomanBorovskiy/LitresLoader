@@ -1,11 +1,11 @@
-import logging
-import aiohttp
 import asyncio
-import requests
-from constants import MY_BOOKS_URL, BOOK_N_PAGE_URL, COOKIE_SID_KEY, MAIN_URL, LOGGING_LEVEL
-from bs4 import BeautifulSoup
-from models import Book
+import logging
 
+import aiohttp
+import requests
+from bs4 import BeautifulSoup
+from constants import BOOK_N_PAGE_URL, COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL, MY_BOOKS_URL
+from models import Book
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -21,6 +21,7 @@ class LitresPaser:
     sid - SID аккаунта
     try_load_empty - попытаться загрузить пути со страницы книги (актуально для аудиокниг и пдф-книг)
     """
+
     session: requests.Session = None
     page_count = -1
     books: list[Book] = []

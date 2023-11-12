@@ -1,15 +1,13 @@
+# import httpx
+import asyncio
 import datetime
 import logging
 from datetime import timedelta
 
+import aiohttp
 import requests
 import requests.cookies
 import selenium.webdriver.remote.webdriver
-
-# import httpx
-import asyncio
-import aiohttp
-
 from bs4 import BeautifulSoup
 from pydantic import BaseModel
 from selenium import webdriver

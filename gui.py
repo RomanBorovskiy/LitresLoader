@@ -1,16 +1,14 @@
-import sys
-
-# import qt_async_threads
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QInputDialog,
-                             QLabel, QVBoxLayout, QWidget, QDialog, QListWidget, QDialogButtonBox, QListView,
-                             QTableWidget, QTableWidgetItem, QSpacerItem, QSizePolicy)
-import PyQt5.QtCore as QtCore
-from enum import Enum
-import functools
 import asyncio
+import functools
+import sys
+from enum import Enum
+
+import PyQt5.QtCore as QtCore
 import qasync
-from qasync import asyncSlot, asyncClose, QApplication
+from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox, QInputDialog, QLabel, QListWidget,
+                             QMainWindow, QPushButton, QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
+                             QVBoxLayout, QWidget)
+from qasync import QApplication, asyncSlot
 
 
 # callback = function(id:int, payload)
@@ -60,7 +58,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Шаг 1. Получить SID")
         self.setGeometry(300, 300, 400, 200)
-        #self.setFixedHeight(400)
+        # self.setFixedHeight(400)
 
         layout = QVBoxLayout()
         layout.setSpacing(10)
@@ -85,11 +83,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.sid_label)
         layout.addWidget(self.button_run)
 
-        #self.stretcher = QSpacerItem(10, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        #layout.addItem(self.stretcher)
+        # self.stretcher = QSpacerItem(10, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        # layout.addItem(self.stretcher)
         self.table = QTableWidget(self)
         layout.addWidget(self.table)
-
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -114,7 +111,6 @@ class MainWindow(QMainWindow):
         self.button_run.setEnabled(bool(sid_value))
 
     def show_books(self, books: list):
-
         links = set()
         for book in books:
             link = set(book.links.keys())
@@ -122,7 +118,6 @@ class MainWindow(QMainWindow):
 
         links = list(links)
         col_count = len(links) + 2
-
 
         self.table.setRowCount(len(books))
         self.table.setColumnCount(col_count)
@@ -133,7 +128,7 @@ class MainWindow(QMainWindow):
         for i in range(2, col_count):
             self.table.setColumnWidth(i, 35)
 
-        self.table.setHorizontalHeaderLabels(["Название", "Автор"]+links )
+        self.table.setHorizontalHeaderLabels(["Название", "Автор"] + links)
         for i, book in enumerate(books):
             self.table.setItem(i, 0, QTableWidgetItem(book.title))
             self.table.setItem(i, 1, QTableWidgetItem(book.author))
@@ -145,9 +140,9 @@ class MainWindow(QMainWindow):
                 self.table.setItem(i, links.index(link) + 2, item)
 
         self.centralWidget().layout().removeItem(self.stretcher)
-        #self.centralWidget().layout().addWidget(self.table)
+        # self.centralWidget().layout().addWidget(self.table)
         self.table.resizeColumnsToContents()
-        #self.layout().addWidget(self.table)
+        # self.layout().addWidget(self.table)
 
     def show_dialog_input_sid(self):
         dialog = QInputDialog(self)
@@ -194,9 +189,7 @@ async def run_app(callback_function: callable):
 
     app = QApplication.instance()
     if hasattr(app, "aboutToQuit"):
-        getattr(app, "aboutToQuit").connect(
-            functools.partial(close_future, future, loop)
-        )
+        getattr(app, "aboutToQuit").connect(functools.partial(close_future, future, loop))
 
     main_window = MainWindow(callback_function)
     main_window.show()

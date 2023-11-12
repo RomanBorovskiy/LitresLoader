@@ -1,12 +1,12 @@
 import asyncio
 import logging
 
-import login_litres
-import litres_parser
 import fileloader
-from constants import COOKIE_SID_KEY, MAIN_URL, LOGGING_LEVEL
+import litres_parser
+import login_litres
+from constants import COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL
+from gui import CallType, gui_run
 from models import Book
-from gui import gui_run, CallType
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -31,16 +31,17 @@ def select_urls(books: list[Book]) -> list:
     book_list = [MAIN_URL + book.links["FB2"] for book in books if "FB2" in book.links]
     return book_list
 
+
 async def gui_callback(call_type: CallType, payload):
     match call_type:
         case CallType.LOGIN:
-            #sid = get_sid()
+            # sid = get_sid()
             sid = "68ba5b2a4zas6d5o8ydzcnb1d91557bo"
             return sid
 
         case CallType.LOAD_BOOKS:
             books = await load_book_list(payload)
-            #books = [Book(title="test1", author="test_a1", url="test_url1", links={"FB2": "test"}, media_type="test"),
+            # books = [Book(title="test1", author="test_a1", url="test_url1", links={"FB2": "test"}, media_type="test"),
             #         Book(title="test2", author="test_a2", url="test_url2", links={"PDF": "test"}, media_type="test")]
             return books
 
@@ -49,7 +50,6 @@ async def gui_callback(call_type: CallType, payload):
 
         case _:
             print("unknown call type")
-
 
 
 def main():
@@ -64,6 +64,7 @@ def main():
     #
     # await download_books(sid, book_list)
     # logging.info("downloaded {0} books".format(len(book_list)))
+
 
 if __name__ == "__main__":
     main()

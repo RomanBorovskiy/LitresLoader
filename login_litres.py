@@ -1,7 +1,7 @@
 import logging
 
 import selenium.webdriver.remote.webdriver
-from constants import COOKIE_AGREEMENT, COOKIE_SID_KEY, ENTER_TEXT, PROFILE_TEXT, MAIN_URL, LOGGING_LEVEL
+from constants import COOKIE_AGREEMENT, COOKIE_SID_KEY, ENTER_TEXT, LOGGING_LEVEL, MAIN_URL, PROFILE_TEXT
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options

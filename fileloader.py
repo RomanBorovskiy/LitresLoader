@@ -1,12 +1,11 @@
-import logging
 import asyncio
-import aiohttp
-import aiofiles
-
+import logging
 from pathlib import Path
-from tqdm import tqdm
-from constants import LOGGING_LEVEL, DOWNLOAD_DIR
 
+import aiofiles
+import aiohttp
+from constants import DOWNLOAD_DIR, LOGGING_LEVEL
+from tqdm import tqdm
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
