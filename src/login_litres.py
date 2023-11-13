@@ -1,7 +1,6 @@
 import logging
 
 import selenium.webdriver.remote.webdriver
-from src.constants import COOKIE_AGREEMENT, COOKIE_SID_KEY, ENTER_TEXT, LOGGING_LEVEL, MAIN_URL, PROFILE_TEXT
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options
@@ -9,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium_stealth import stealth
+from src.constants import COOKIE_AGREEMENT, COOKIE_SID_KEY, ENTER_TEXT, LOGGING_LEVEL, MAIN_URL, PROFILE_TEXT
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -64,7 +64,7 @@ class LitresSid:
                 EC.element_to_be_clickable((By.LINK_TEXT, ENTER_TEXT))
             )
             login_btn.click()
-        except Exception as ex:  #  не делайте так)))
+        except Exception as ex:  # не делайте так)))
             logging.error("Error while loading. {0}".format(ex))
             return ""
 

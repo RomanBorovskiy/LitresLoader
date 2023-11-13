@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 MAIN_URL = "https://www.litres.ru"
 MY_BOOKS_URL = "https://www.litres.ru/pages/my_books_fresh/"  # первая страница с книгам
@@ -10,6 +11,6 @@ COOKIE_SID_KEY = "SID"
 COOKIE_AGREEMENT = {"name": "cookie-agreement", "value": "1", "domain": "www.litres.ru"}
 
 # настроки что можно и поменять
-LOGGING_LEVEL = logging.INFO
-DOWNLOAD_DIR = "download"
+LOGGING_LEVEL = logging.DEBUG
+DOWNLOAD_PATH = Path(__file__).parent.parent / "download"  # путь для скачивания
 CHUNK_SIZE = 2**15  # 32кб размер частей для скачивания

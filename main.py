@@ -1,6 +1,6 @@
 import logging
 
-from src import fileloader, login_litres, litres_parser
+from src import fileloader, litres_parser, login_litres
 from src.constants import COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL
 from src.gui import CallType, gui_run
 from src.models import Book

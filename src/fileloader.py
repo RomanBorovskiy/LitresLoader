@@ -4,13 +4,10 @@ from pathlib import Path
 
 import aiofiles
 import aiohttp
-from src.constants import CHUNK_SIZE, DOWNLOAD_DIR, LOGGING_LEVEL
+from src.constants import CHUNK_SIZE, DOWNLOAD_PATH, LOGGING_LEVEL
 from tqdm import tqdm
 
 logging.basicConfig(level=LOGGING_LEVEL)
-
-
-DEFAULT_PATH = Path(__file__).parent / DOWNLOAD_DIR
 
 
 class FileLoader:
@@ -28,7 +25,7 @@ class FileLoader:
     concurrent_count: int = 10  # одновременно будет скачиваться файлов
 
     def __init__(self, cookie: dict[str, str], load_list: list[str], download_path: Path = None):
-        self.load_path = download_path or DEFAULT_PATH
+        self.load_path = download_path or DOWNLOAD_PATH
         self.load_list = load_list
         self.cookie = cookie
         if not self.load_path.exists():
