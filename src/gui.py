@@ -6,24 +6,9 @@ from functools import partial
 
 import PyQt5.QtCore as QtCore
 import qasync
-from PyQt5.QtWidgets import (
-    QDesktopWidget,
-    QDialog,
-    QDialogButtonBox,
-    QGridLayout,
-    QHBoxLayout,
-    QInputDialog,
-    QLabel,
-    QListWidget,
-    QMainWindow,
-    QMessageBox,
-    QPushButton,
-    QTableWidget,
-    QTableWidgetItem,
-    QVBoxLayout,
-    QWidget,
-)
-
+from PyQt5.QtWidgets import (QDesktopWidget, QDialog, QDialogButtonBox, QGridLayout, QHBoxLayout, QInputDialog, QLabel,
+                             QListWidget, QMainWindow, QMessageBox, QPushButton, QTableWidget, QTableWidgetItem,
+                             QVBoxLayout, QWidget)
 from qasync import QApplication, asyncSlot
 
 

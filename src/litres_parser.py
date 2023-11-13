@@ -1,12 +1,12 @@
 import asyncio
 import logging
+from http import HTTPStatus
 
 import aiohttp
 import requests
 from bs4 import BeautifulSoup
-from constants import BOOK_N_PAGE_URL, COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL, MY_BOOKS_URL
-from models import Book
-from http import HTTPStatus
+from src.constants import BOOK_N_PAGE_URL, COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL, MY_BOOKS_URL
+from src.models import Book
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -139,7 +139,9 @@ class LitresPaser:
             async with aiohttp.ClientSession(cookies=cookie) as session:
                 async with session.get(url=book.url) as response:
                     if response.status != HTTPStatus.OK:
-                        logging.error("Error loading extra links for {0}, status: {1}".format(book.title, response.status))
+                        logging.error(
+                            "Error loading extra links for {0}, status: {1}".format(book.title, response.status)
+                        )
                         return False
 
                     text = await response.text()
@@ -160,7 +162,7 @@ class LitresPaser:
             if self.page_count < 1:
                 logging.error("no books pages found")
                 return []
-            
+
             logging.info("load main page")
             self.books = self._get_books(page_html)
             if self.page_count > 1:

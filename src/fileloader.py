@@ -4,7 +4,7 @@ from pathlib import Path
 
 import aiofiles
 import aiohttp
-from constants import DOWNLOAD_DIR, LOGGING_LEVEL, CHUNK_SIZE
+from src.constants import CHUNK_SIZE, DOWNLOAD_DIR, LOGGING_LEVEL
 from tqdm import tqdm
 
 logging.basicConfig(level=LOGGING_LEVEL)

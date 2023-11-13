@@ -1,11 +1,9 @@
 import logging
 
-import fileloader
-import litres_parser
-import login_litres
-from constants import COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL
-from gui import CallType, gui_run
-from models import Book
+from src import fileloader, login_litres, litres_parser
+from src.constants import COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL
+from src.gui import CallType, gui_run
+from src.models import Book
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -35,7 +33,7 @@ async def gui_callback(call_type: CallType, payload):
     match call_type:
         case CallType.LOGIN:
             sid = get_sid()
-            #sid = "68ba5b2a4zas6d5o8ydzcnb1d91557bo"
+            # sid = "68ba5b2a4zas6d5o8ydzcnb1d91557bo"
             return sid
 
         case CallType.LOAD_BOOKS:
