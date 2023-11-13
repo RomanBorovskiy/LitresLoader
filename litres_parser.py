@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from constants import BOOK_N_PAGE_URL, COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL, MY_BOOKS_URL
 from models import Book
+from http import HTTPStatus
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -44,7 +45,12 @@ class LitresPaser:
         else:
             page_url = MY_BOOKS_URL
 
-        result = self.session.get(page_url).text
+        response = self.session.get(page_url)
+        if response.status_code == HTTPStatus.OK:
+            result = response.text
+        else:
+            result = ""
+            logging.error("book page {0} not found. Error {1}".format(page_number, response.status_code))
         return result
 
     @staticmethod
@@ -91,13 +97,13 @@ class LitresPaser:
 
             if name_a:
                 title = clear_string(name_a["title"])
-                href = name_a["href"]
+                href = MAIN_URL + name_a["href"]
 
             if download_div:
                 links = download_div.find_all("a", {"class": "art-download__format"})
                 if links:
                     links_dict = {
-                        clear_string(link.text): link["href"]
+                        clear_string(link.text): MAIN_URL + link["href"]
                         for link in links
                         if "art-download__more" not in link["class"]
                     }
@@ -116,13 +122,13 @@ class LitresPaser:
         links = bs.find_all("a", {"class": "biblio_book_download_file__link"})
 
         if links:
-            links_dict = {clear_string(link.span.string): link["href"] for link in links}
+            links_dict = {clear_string(link.span.string).upper(): MAIN_URL + link["href"] for link in links}
 
         # бывают особые книги - пдф называются. У них только одна ссылка на скачивание.
         # может бывают еще и другие виды, но я их пока не видел
         pdf_button = bs.find("div", {"data-type": "pdf"})
         if pdf_button and pdf_button.a:
-            links_dict["PDF"] = pdf_button.a["href"]
+            links_dict["PDF"] = MAIN_URL + pdf_button.a["href"]
 
         return links_dict
 
@@ -131,9 +137,12 @@ class LitresPaser:
 
         async def get_async(book: Book):
             async with aiohttp.ClientSession(cookies=cookie) as session:
-                async with session.get(url=MAIN_URL + book.url) as response:
-                    text = await response.text()
+                async with session.get(url=book.url) as response:
+                    if response.status != HTTPStatus.OK:
+                        logging.error("Error loading extra links for {0}, status: {1}".format(book.title, response.status))
+                        return False
 
+                    text = await response.text()
                     links = self._get_book_page_info(text)
                     book.links = links
                     logging.info("loading extra links for {0}".format(book.title))
@@ -151,11 +160,12 @@ class LitresPaser:
             if self.page_count < 1:
                 logging.error("no books pages found")
                 return []
-
+            
+            logging.info("load main page")
             self.books = self._get_books(page_html)
             if self.page_count > 1:
                 for page_num in range(2, self.page_count + 1):
-                    logging.debug("load page {0}".format(page_num))
+                    logging.info("load page {0}".format(page_num))
 
                     page_html = self._get_page(page_num)
                     books_from_page = self._get_books(page_html)
@@ -168,4 +178,5 @@ class LitresPaser:
         if self.try_load_empty:
             await self.load_empty_links()
 
+        self.books.sort(key=lambda x: x.title)
         return self.books

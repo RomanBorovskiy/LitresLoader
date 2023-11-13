@@ -4,7 +4,7 @@ from pathlib import Path
 
 import aiofiles
 import aiohttp
-from constants import DOWNLOAD_DIR, LOGGING_LEVEL
+from constants import DOWNLOAD_DIR, LOGGING_LEVEL, CHUNK_SIZE
 from tqdm import tqdm
 
 logging.basicConfig(level=LOGGING_LEVEL)
@@ -24,7 +24,7 @@ class FileLoader:
     load_path: Path = None
     load_list: list = []
     cookie: dict
-    chunk_size = 2**15  # 32кб размер частей для скачивания
+    chunk_size = CHUNK_SIZE
     concurrent_count: int = 10  # одновременно будет скачиваться файлов
 
     def __init__(self, cookie: dict[str, str], load_list: list[str], download_path: Path = None):
@@ -60,6 +60,7 @@ class FileLoader:
                                 async for chunk in response.content.iter_chunked(self.chunk_size):
                                     pb.update(len(chunk))
                                     await f.write(chunk)
+            return True
 
         tasks = [asyncio.create_task(download_file(url)) for url in self.load_list]
-        await asyncio.gather(*tasks)
+        return await asyncio.gather(*tasks)

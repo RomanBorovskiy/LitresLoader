@@ -19,7 +19,7 @@ class LitresSid:
     возвращает строку с SID или пустую строку
     """
 
-    time_out: int = 20  #  ожидание загрузки страницы - 20 сек
+    time_out: int = 20  # ожидание загрузки страницы - 20 сек
     logging_timeout: int = 60 * 60  # ожидание входа - 1 час
     driver: selenium.webdriver.remote.webdriver.WebDriver
 
@@ -80,10 +80,10 @@ class LitresSid:
 
         if sid:
             sid_value = sid["value"]
-            logging.debug("SID: " + sid["value"])
+            logging.info("SID: " + sid["value"])
         else:
             sid_value = ""
-            logging.debug("cookie SID not found")
+            logging.error("cookie SID not found")
 
         return sid_value
 
