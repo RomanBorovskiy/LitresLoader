@@ -30,7 +30,8 @@ class LitresSid:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("useAutomationExtension", False)
 
-        # driver = webdriver.Firefox()
+        # self.driver = webdriver.Firefox() - не работает со stealth
+
         self.driver = webdriver.Chrome(options=options)
         stealth(self.driver, platform="Win32", fix_hairline=True, languages=["ru-RU"])
 
@@ -54,7 +55,7 @@ class LitresSid:
         try:
             self.driver.get(MAIN_URL)
         except WebDriverException:
-            logging.error("error while loading")
+            logging.error("Error while loading")
             return ""
 
         logging.debug("wait for end loading")
@@ -63,8 +64,8 @@ class LitresSid:
                 EC.element_to_be_clickable((By.LINK_TEXT, ENTER_TEXT))
             )
             login_btn.click()
-        except WebDriverException:
-            logging.error("error while loading")
+        except Exception as ex:  #  не делайте так)))
+            logging.error("Error while loading. {0}".format(ex))
             return ""
 
         logging.debug("wait for logging...")
@@ -72,8 +73,8 @@ class LitresSid:
             WebDriverWait(self.driver, self.logging_timeout).until(
                 EC.element_to_be_clickable((By.LINK_TEXT, PROFILE_TEXT))
             )
-        except WebDriverException:
-            logging.error("error while logging wait")
+        except Exception as ex:
+            logging.error("Error while logging wait. {0}".format(ex))
             return ""
 
         sid = self.driver.get_cookie(COOKIE_SID_KEY)
