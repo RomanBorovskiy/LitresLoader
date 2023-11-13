@@ -33,7 +33,6 @@ async def gui_callback(call_type: CallType, payload):
     match call_type:
         case CallType.LOGIN:
             sid = get_sid()
-            # sid = "68ba5b2a4zas6d5o8ydzcnb1d91557bo"
             return sid
 
         case CallType.LOAD_BOOKS:
