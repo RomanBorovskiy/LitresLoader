@@ -13,12 +13,12 @@ def get_sid() -> str:
     return sid
 
 
-async def load_book_list(sid: str) -> list:
+async def load_book_list(sid: str) -> list[Book]:
     books = await litres_parser.LitresPaser(sid, True).do_parse()
     return books
 
 
-async def download_books(sid: str, books: list[str]):
+async def download_books(sid: str, books: list[str]) -> list[bool | Exception]:
     cookie = {COOKIE_SID_KEY: sid}
 
     return await fileloader.FileLoader(cookie=cookie, load_list=books).start()

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import aiofiles
 import aiohttp
-from src.constants import CHUNK_SIZE, DOWNLOAD_PATH, LOGGING_LEVEL
+from src.constants import CHUNK_SIZE, DOWNLOAD_PATH, LOGGING_LEVEL, CONCURRENCY
 from tqdm import tqdm
 
 logging.basicConfig(level=LOGGING_LEVEL)
@@ -22,7 +22,7 @@ class FileLoader:
     load_list: list = []
     cookie: dict
     chunk_size = CHUNK_SIZE
-    concurrent_count: int = 10  # одновременно будет скачиваться файлов
+    concurrent_count = CONCURRENCY  # одновременно будет скачиваться файлов
 
     def __init__(self, cookie: dict[str, str], load_list: list[str], download_path: Path = None):
         self.load_path = download_path or DOWNLOAD_PATH
@@ -31,8 +31,9 @@ class FileLoader:
         if not self.load_path.exists():
             self.load_path.mkdir()
 
-    async def start(self):
-        """Запуск скачивания"""
+    async def start(self) -> list[bool | Exception]:
+        """Запуск скачивания.
+        Возвращает список из True - если скачали и исключение, если что-то пошло не так"""
 
         semaphore = asyncio.Semaphore(self.concurrent_count)
 
@@ -60,4 +61,4 @@ class FileLoader:
             return True
 
         tasks = [asyncio.create_task(download_file(url)) for url in self.load_list]
-        return await asyncio.gather(*tasks)
+        return await asyncio.gather(*tasks, return_exceptions=True)

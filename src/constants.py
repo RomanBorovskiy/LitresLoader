@@ -15,3 +15,4 @@ COOKIE_AGREEMENT = {"name": "cookie-agreement", "value": "1", "domain": "www.lit
 LOGGING_LEVEL = logging.INFO
 DOWNLOAD_PATH = Path(__file__).parent.parent / "download"  # путь для скачивания
 CHUNK_SIZE = 2**15  # 32кб размер частей для скачивания
+CONCURRENCY = 10  # одновременно будет скачиваться книг
