@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from src import fileloader, litres_parser, login_litres
 from src.constants import COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL
@@ -20,7 +21,6 @@ async def load_book_list(sid: str) -> list[Book]:
 
 async def download_books(sid: str, books: list[str]) -> list[bool | Exception]:
     cookie = {COOKIE_SID_KEY: sid}
-
     return await fileloader.FileLoader(cookie=cookie, load_list=books).start()
 
 
@@ -29,7 +29,8 @@ def select_urls(books: list[Book]) -> list:
     return book_list
 
 
-async def gui_callback(call_type: CallType, payload):
+async def gui_callback(call_type: CallType, payload: Any):
+    """Обработчик входящих вызовов от интерфейса"""
     match call_type:
         case CallType.LOGIN:
             sid = get_sid()
