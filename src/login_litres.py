@@ -88,7 +88,9 @@ class LitresSid:
 
         return sid_value
 
-    def get_sid(self):
+    def get_sid(self) -> str:
+        """Запускает браузер с сайтом litres.ru, ждет входа в аккаунт
+        и возвращает строку с SID или пустую строку"""
         self._init_driver()
         self._load_cookies(COOKIE_AGREEMENT)
         try:

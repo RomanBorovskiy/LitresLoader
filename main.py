@@ -19,7 +19,7 @@ async def load_book_list(sid: str) -> list[Book]:
     return books
 
 
-async def download_books(sid: str, books: list[str]) -> list[bool | Exception]:
+async def download_books(sid: str, books: list[str]) -> tuple[bool | Exception]:
     cookie = {COOKIE_SID_KEY: sid}
     return await fileloader.FileLoader(cookie=cookie, load_list=books).start()
 

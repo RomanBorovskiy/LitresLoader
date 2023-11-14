@@ -55,6 +55,9 @@ class LitresPaser:
 
     @staticmethod
     def _get_pages_count(page_html: str) -> int:
+        """Получает количество страниц в списке книг.
+        Для этого парсится страница. Как правило, первая"""
+
         bs = BeautifulSoup(page_html, "html.parser")
 
         div_books = bs.find("div", {"class": "books_container"})
@@ -68,7 +71,7 @@ class LitresPaser:
 
     @staticmethod
     def _get_books(page_html: str) -> list[Book]:
-        """Парсит страницу на список книг"""
+        """Парсит страницу и возвращает список книг"""
         result = []
 
         bs = BeautifulSoup(page_html, "html.parser")
@@ -154,7 +157,10 @@ class LitresPaser:
         result = await asyncio.gather(*tasks)
         return result
 
-    async def do_parse(self):
+    async def do_parse(self) -> list[Book]:
+        """Основная функция.
+        Все парсим, возвращаем список книг. Ну и в классе храним заодно"""
+
         self._init_session()
         try:
             page_html = self._get_page()
