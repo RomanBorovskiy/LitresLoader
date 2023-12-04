@@ -1,6 +1,7 @@
 import asyncio
 import functools
 import sys
+import os
 from enum import Enum
 from functools import partial
 
@@ -125,7 +126,8 @@ class MainWindow(QMainWindow):
         widget.setLayout(self.grid_layout)
         self.setCentralWidget(widget)
 
-        self.set_sid("")
+        sid_value = os.environ.get('SID_KEY')
+        self.set_sid(sid_value)
         self.set_books([])
         self.set_media_types([])
 

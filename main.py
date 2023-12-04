@@ -1,5 +1,6 @@
 import logging
 from typing import Any
+from dotenv import load_dotenv
 
 from src import fileloader, litres_parser, login_litres
 from src.constants import COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL
@@ -51,6 +52,7 @@ async def gui_callback(call_type: CallType, payload: Any):
 
 
 def main():
+    load_dotenv()
     gui_run(gui_callback)
 
 
