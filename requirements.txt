@@ -8,3 +8,4 @@ tqdm==4.66.1
 aiofiles==23.2.1
 PyQt5==5.15.10
 qasync==0.26.0
+python-dotenv==1.0.0
