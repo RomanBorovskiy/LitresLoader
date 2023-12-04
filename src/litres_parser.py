@@ -126,6 +126,9 @@ class LitresPaser:
 
         if links:
             links_dict = {clear_string(link.span.string).upper(): MAIN_URL + link["href"] for link in links}
+            logging.debug("links_dict: " + str(links_dict))
+        else:
+            logging.error("not found links")
 
         # бывают особые книги - пдф называются. У них только одна ссылка на скачивание.
         # может бывают еще и другие виды, но я их пока не видел
