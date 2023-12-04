@@ -5,7 +5,8 @@ from http import HTTPStatus
 import aiohttp
 import requests
 from bs4 import BeautifulSoup
-from src.constants import BOOK_N_PAGE_URL, COOKIE_SID_KEY, LOGGING_LEVEL, MAIN_URL, MY_BOOKS_URL
+from src.constants import (API_FILES_URL, BOOK_N_PAGE_URL, COOKIE_SID_KEY, DOWNLOAD_FILES_URL, LOGGING_LEVEL, MAIN_URL,
+                           MY_BOOKS_URL, USED_TYPES)
 from src.models import Book
 
 logging.basicConfig(level=LOGGING_LEVEL)
@@ -87,6 +88,7 @@ class LitresPaser:
             author = "Нет"
             title = "Нет"
             href = ""
+            book_id = ""
             links_dict = {}
 
             author_div = book.find("div", {"class": "art__author"})
@@ -101,6 +103,8 @@ class LitresPaser:
             if name_a:
                 title = clear_string(name_a["title"])
                 href = MAIN_URL + name_a["href"]
+                # получаем ID книги из URL - а как еще?
+                book_id = name_a["href"].split("-")[-1].replace("/", "")
 
             if download_div:
                 links = download_div.find_all("a", {"class": "art-download__format"})
@@ -111,7 +115,9 @@ class LitresPaser:
                         if "art-download__more" not in link["class"]
                     }
 
-            current_book = Book(title=title, author=author, url=href, links=links_dict, media_type=data_type)
+            current_book = Book(
+                ident=book_id, title=title, author=author, url=href, links=links_dict, media_type=data_type
+            )
             result.append(current_book)
 
         return result
@@ -122,7 +128,8 @@ class LitresPaser:
         links_dict = {}
 
         bs = BeautifulSoup(html, "html.parser")
-        links = bs.find_all("a", {"class": "biblio_book_download_file__link"})
+        # links = bs.find_all("a", {"class": "biblio_book_download_file__link"})
+        links = bs.find_all("a", {"data-analytics-id": "download-button"})
 
         if links:
             links_dict = {clear_string(link.span.string).upper(): MAIN_URL + link["href"] for link in links}
@@ -160,6 +167,48 @@ class LitresPaser:
         result = await asyncio.gather(*tasks)
         return result
 
+    async def load_empty_links_api(self):
+        cookie = {COOKIE_SID_KEY: self.sid_value}
+
+        async def get_async(book: Book):
+            logging.info(f"book: {book}")
+            api_url = API_FILES_URL.format(book_id=book.ident)
+
+            async with aiohttp.ClientSession(cookies=cookie) as session:
+                async with session.get(url=api_url) as response:
+                    if response.status != HTTPStatus.OK:
+                        logging.error(
+                            "Error loading extra links for {0}, status: {1}".format(book.title, response.status)
+                        )
+                        return False
+
+                    json_files = await response.json()
+
+                    if (json_files.get("status") != 200) or (not json_files.get("payload")):
+                        logging.error(
+                            "Error loading extra links for {0}, error: {1}".format(book.title, json_files["status"])
+                        )
+                        return False
+
+                    payload = json_files["payload"]["data"]
+
+                    links = {
+                        USED_TYPES[data["encoding_type"]]: DOWNLOAD_FILES_URL.format(
+                            book_id=book.ident, file_id=data["id"], file_name=data["filename"]
+                        )
+                        for data in payload
+                        if data["encoding_type"] in USED_TYPES
+                    }
+
+                    logging.debug(f"links:{links}")
+                    book.links = links
+                    logging.info("loading extra links for {0}".format(book.title))
+                    return bool(links)
+
+        tasks = [asyncio.create_task(get_async(book)) for book in self.books if not book.links]
+        result = await asyncio.gather(*tasks)
+        return result
+
     async def do_parse(self) -> list[Book]:
         """Основная функция.
         Все парсим, возвращаем список книг. Ну и в классе храним заодно"""
@@ -187,7 +236,7 @@ class LitresPaser:
             self._close_session()
 
         if self.try_load_empty:
-            await self.load_empty_links()
+            await self.load_empty_links_api()
 
         self.books.sort(key=lambda x: x.title)
         return self.books
